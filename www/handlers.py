@@ -66,7 +66,7 @@ async def cookie2user(cookie_str):
         user = await User.find(uid)
         if user is None:
             return None
-        s = '%s-%s-%s' % (uid, user.password, expires, _COOKIE_KEY)
+        s = '%s-%s-%s-%s' % (uid, user.password, expires, _COOKIE_KEY)
         if sha1 != hashlib.sha1(s.encode('utf-8')).hexdigest():
             logging.info('invalid sha1')
             return None
@@ -121,7 +121,7 @@ def signin():
     }
 
 
-@post('api/authenticate')
+@post('/api/authenticate')
 async def authenticate(*, email, password):
     if not email:
         raise APIValueError('email', 'Invalid email')
@@ -160,7 +160,7 @@ def manage():
     return 'redirect:/manage/comments'
 
 
-@get('manage/comments')
+@get('/manage/comments')
 def manage_comments(*, page='1'):
     return {
         '__template__': 'manage_comments.html',
@@ -187,6 +187,8 @@ def manage_create_blog():
 
 @get('/manage/blogs/edit')
 def manage_edit_blog(*, id):
+    logging.info('edit blog path==========')
+    logging.info('/api/blogs/%s' % id)
     return {
         '__template__': 'manage_blog_edit.html',
         'id': id,

@@ -2,6 +2,8 @@ import asyncio
 import logging
 import aiomysql
 
+logging.basicConfig(format='%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s: %(message)s',level=logging.DEBUG)
+
 
 def log(sql, args=()):
     logging.info('SQL: %s' % sql)

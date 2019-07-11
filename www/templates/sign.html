@@ -1,0 +1,63 @@
+{% extends '__base__.html' %}
+{% block title %}Signin/登录{% endblock %}
+{% block beforehead %}
+
+<script>
+
+$(function() {
+  var vmAuth = new Vue({
+    el: '#vm',
+    data: {
+      email: '',
+      passwd: ''
+    },
+    methods: {
+      submit: function(event) {
+        event.preventDefault();
+        var $form = $('#vm');
+        var email = this.email.trim().toLowerCase();
+        var data = {
+          email: email,
+          passwd: this.passwd === '' ? '': CryptoJS.SHA1(email + ':' + this.passwd).toString()
+        };
+        $form.postJSON('/api/authenticate', data,
+        function(err, result) {
+          if (!err) {
+            location.assign('/');
+          }
+        });
+      }
+    }
+  });
+  $('#vm').show();
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="uk-grid">
+  <div class="uk-width-1-1">
+    <h4>Signin/欢迎登录!</h4>
+    <form id="vm" v-on="submit: submit" class="uk-form-stacked">
+      <div class="uk-alert uk-alert-danger uk-hidden"></div>
+      <div class="uk-margin-top">
+        <label class="uk-form-label">Email/电子邮箱:</label>
+        <div class="uk-inline">
+          <span class="uk-form-icon" uk-icon="user"></span>
+          <input class="uk-input uk-form-width-medium" v-model="email" type="text" maxlength="50" placeholder="Email"></input>
+        </div>
+      </div>
+      <div class="uk-margin-top">
+        <label class="uk-form-label">Password/输入密码:</label>
+        <div class="uk-inline">
+          <span class="uk-form-icon" uk-icon="user"></span>
+          <input class="uk-input uk-form-width-medium" v-model="password" type="password" maxlength="50" placeholder="Email"></input>
+        </div>
+      </div>
+      <div class="uk-margin-top">
+        <button type="submit" class="uk-button uk-button-primary">Signin/登录</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
